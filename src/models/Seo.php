@@ -1,23 +1,20 @@
 <?php
+
 namespace sbs\models;
 
-use Yii;
+use yii\db\ActiveRecord;
 
 /**
- * This is the model class for table "seo_fields".
+ * This is the model class for table "{{%seo}}".
  *
  * @property integer $id
  * @property integer $item_id
  * @property string $modelName
- * @property string $h1
- * @property string $seo_title
- * @property string $seo_keywords
- * @property string $seo_description
- * @property string $seo_text
- * @property string $meta_index
- * @property string $redirect_301
+ * @property string $title
+ * @property string $keywords
+ * @property string $description
  */
-class Seo extends \yii\db\ActiveRecord
+class Seo extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -34,10 +31,10 @@ class Seo extends \yii\db\ActiveRecord
     {
         return [
             [['item_id'], 'integer'],
-            [['text'], 'string'],
+            [['modelName'], 'required'],
             [['modelName'], 'string', 'max' => 150],
-            [['h1', 'title', 'keywords', 'meta_index'], 'string', 'max' => 255],
-            [['description', 'redirect_301'], 'string', 'max' => 522]
+            [['title', 'keywords'], 'string', 'max' => 255],
+            [['description'], 'string', 'max' => 512],
         ];
     }
 
@@ -48,15 +45,9 @@ class Seo extends \yii\db\ActiveRecord
     {
         return [
             'id' => '#',
-            'item_id' => 'Item ID',
-            'modelName' => 'Model Name',
-            'h1' => 'H1',
             'title' => 'Seo Title',
             'keywords' => 'Seo Keywords',
             'description' => 'Seo Description',
-            'text' => 'Seo Text',
-            'meta_index' => 'Meta Index',
-            'redirect_301' => 'Redirect 301',
         ];
     }
 }
