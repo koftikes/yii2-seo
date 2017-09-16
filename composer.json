@@ -1,31 +1,36 @@
 {
-    "name": "pistol88/yii2-seo",
-    "description": "Модуль позволяет привязывать SEO поля к моделям",
-    "keywords": ["yii2", "yii2", "application", "SEO", "seo", "pistol88"],
-    "homepage": "https://github.com/pistol88/yii2-seo",
+    "name": "sbs/yii2-seo",
+    "description": "The module allows link SEO fields to model.",
+    "keywords": ["yii2", "seo", "extension", "module"],
+    "homepage": "https://github.com/koftikes/yii2-seo",
     "type": "yii2-extension",
     "license": "BSD-3-Clause",
     "support": {
-        "source": "https://github.com/pistol88/yii2-seo"
+        "issues": "https://github.com/koftikes/yii2-seo/issues"
     },
     "authors": [
         {
-            "name": "Ilya Pistol + Ivan Kartonka",
+            "name": "Konstantin Litvinov",
+            "email": "koftikes@gmail.com",
+            "homepage": "http://sbsweb.ru"
+        },
+        {
+            "name": "Ilya Pistol, Ivan Kartonka",
             "email": "pistol88@gmail.com"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "require": {
         "php": ">=5.4.0",
-        "yiisoft/yii2": "*",
-        "yiisoft/yii2-bootstrap": "*"
+        "yiisoft/yii2": "^2.0",
+        "yiisoft/yii2-bootstrap": "^2.0"
     },
     "config": {
         "process-timeout": 1800
     },
     "autoload": {
         "psr-4": {
-            "pistol88\\seo\\": ""
+            "sbs\\": "src"
         }
     }
 }

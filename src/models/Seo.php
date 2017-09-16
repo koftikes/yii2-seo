@@ -1,5 +1,5 @@
 <?php
-namespace pistol88\seo\models;
+namespace sbs\models;
 
 use Yii;
 
@@ -47,7 +47,7 @@ class Seo extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
+            'id' => '#',
             'item_id' => 'Item ID',
             'modelName' => 'Model Name',
             'h1' => 'H1',

@@ -1,10 +1,10 @@
 <?php
-namespace pistol88\seo\widgets;
+namespace sbs\widgets;
 
-use pistol88\seo\models\Seo;
+use Yii;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use Yii;
+use sbs\models\Seo;
 
 class SeoForm extends \yii\base\Widget
 {
@@ -18,8 +18,8 @@ class SeoForm extends \yii\base\Widget
         if(empty($this->modelName)) {
             $this->modelName = $this->model->className();
         }
-        
-        \pistol88\seo\assets\FormAsset::register($this->getView());
+
+        \sbs\assets\FormAsset::register($this->getView());
         
         parent::init();
     }

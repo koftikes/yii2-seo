@@ -1,6 +1,6 @@
 <?php
 
-namespace pistol88\seo\assets;
+namespace sbs\assets;
 
 use yii\web\AssetBundle;
 

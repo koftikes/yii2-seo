@@ -1,32 +1,18 @@
-# yii console command
-/yii
+# cache directories
+Thumbs.db
+*.DS_Store
+*.empty
 
-# phpstorm project files
+#projects files
 .idea
-
-# netbeans project files
 nbproject
-
-# zend studio for eclipse project files
 .buildpath
 .project
 .settings
 
-# windows thumbnail cache
-Thumbs.db
-
-# composer vendor dir
+# vendor dir
 /vendor
 
-# composer itself is not needed
-composer.phar
-# composer.lock
+# composer.lock and phpunit config
 /composer.lock
-
-# Mac DS_Store Files
-.DS_Store
-
-# phpunit itself is not needed
-phpunit.phar
-# local phpunit config
 /phpunit.xml
