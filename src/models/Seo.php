@@ -44,7 +44,6 @@ class Seo extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => '#',
             'title' => 'Seo Title',
             'keywords' => 'Seo Keywords',
             'description' => 'Seo Description',

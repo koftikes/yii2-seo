@@ -1,52 +1,71 @@
 <?php
+
 namespace sbs\widgets;
 
-use Yii;
-use yii\helpers\Html;
-use yii\helpers\Url;
 use sbs\models\Seo;
+use yii\base\InvalidConfigException;
+use yii\base\Widget;
+use yii\db\ActiveRecord;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 
-class SeoForm extends \yii\base\Widget
+class SeoForm extends Widget
 {
-    public $model = null;
-    public $modelName = null;
-    public $form = null;
+    const TYPE_PANEL = 1;
+    const TYPE_COLLAPSE = 2;
+    const TYPE_SIMPLE = 3;
+
+    /** @var ActiveRecord */
+    public $model;
+
+    /** @var  ActiveForm */
+    public $form;
+
     public $title = 'SEO';
-    
+
+    /** @var string Type of widget display */
+    public $type = self::TYPE_COLLAPSE;
+
     public function init()
     {
-        if(empty($this->modelName)) {
-            $this->modelName = $this->model->className();
+        if ($this->form === null || !$this->form instanceof ActiveForm) {
+            throw new InvalidConfigException('The "form" property must be set and it should be instance of "ActiveForm".');
         }
 
-        \sbs\assets\FormAsset::register($this->getView());
-        
+        if ($this->model === null || !$this->model instanceof ActiveRecord) {
+            throw new InvalidConfigException('The "model" property must be set and it should be instance of "ActiveRecord".');
+        }
+
         parent::init();
     }
 
     public function run()
     {
-        if (!$this->model->isNewRecord) {
-            if (($this->model = Seo::findOne(['item_id' => $this->model->id, 'modelName' => $this->modelName])) === null) {
-                $this->model = new Seo;
-            }
-        } else {
+        if ($this->model->isNewRecord) {
             $this->model = new Seo;
+        } else {
+            $this->model = $this->model->seo;
         }
 
         $content = [];
+        $content[] = $this->form->field($this->model, 'title')->textInput();
+        $content[] = $this->form->field($this->model, 'keywords')->textarea();
+        $content[] = $this->form->field($this->model, 'description')->textarea(['rows' => 4]);
 
-        $content[] = $this->form->field($this->model, 'modelName')->hiddenInput(['value' => $this->modelName])->label(false);
-        $content[] = $this->form->field($this->model, 'title')->textInput(['maxlength' => true]);
-        $content[] = $this->form->field($this->model, 'description')->textInput(['maxlength' => true]);
-        $content[] = $this->form->field($this->model, 'keywords')->textInput(['maxlength' => true]);
-        
-        $title = Html::a($this->title, '#seo-body', ['class' => 'toggle']);
-        $heading = Html::tag('div', $title, ['class' => 'panel-heading']);
-        $body = Html::tag('div', implode('', $content), ['class' => 'panel-body', 'id' => 'seo-body', 'style' => 'display:none;']);
-        
-        $view = Html::tag('div', $heading . $body, ['class' => 'panel panel-default pistol88-seo']);
-        
-        return $view;
+        if ($this->type == self::TYPE_SIMPLE) {
+            return implode('', $content);
+        }
+
+        $body = Html::tag('div', implode('', $content), ['class' => 'panel-body']);
+        if ($this->type == self::TYPE_COLLAPSE) {
+            $title = Html::a($this->title, '#' . $this->id, ['data-toggle' => 'collapse']);
+            $body = Html::tag('div', $body, ['class' => 'panel-collapse collapse', 'id' => $this->id]);
+        } else {
+            $title = $this->title;
+        }
+
+        $heading = Html::tag('div', Html::tag('h4', $title, ['class' => 'panel-title']), ['class' => 'panel-heading']);
+
+        return Html::tag('div', $heading . $body, ['class' => 'panel panel-default']);
     }
 }

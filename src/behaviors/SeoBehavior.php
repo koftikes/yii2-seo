@@ -2,15 +2,13 @@
 
 namespace sbs\behaviors;
 
+use sbs\models\Seo;
 use Yii;
 use yii\base\Behavior;
 use yii\db\ActiveRecord;
-use sbs\models\Seo;
 
 class SeoBehavior extends Behavior
 {
-    private $seo;
-
     /**
      * @inheritdoc
      */
@@ -23,14 +21,20 @@ class SeoBehavior extends Behavior
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
     public function updateFields($event)
     {
-        $model = $this->getSeo();
+        $model = $this->findSeo();
         if ($model->load(Yii::$app->request->post())) {
             $model->save();
         }
     }
 
+    /**
+     * @inheritdoc
+     */
     public function deleteFields($event)
     {
         if ($this->owner->seo) {
@@ -40,7 +44,10 @@ class SeoBehavior extends Behavior
         return true;
     }
 
-    public function getSeo()
+    /**
+     * @return Seo|static
+     */
+    protected function findSeo()
     {
         $model = Seo::findOne(['item_id' => $this->owner->id, 'modelName' => $this->owner->className()]);
         if ($model == null) {
