@@ -2,13 +2,16 @@
 
 namespace sbs\behaviors;
 
-use sbs\models\Seo;
 use Yii;
+use sbs\models\Seo;
 use yii\base\Behavior;
 use yii\db\ActiveRecord;
 
 class SeoBehavior extends Behavior
 {
+    /** @var ActiveRecord */
+    private $seo;
+
     /**
      * @inheritdoc
      */
@@ -26,7 +29,7 @@ class SeoBehavior extends Behavior
      */
     public function updateFields($event)
     {
-        $model = $this->findSeo();
+        $model = $this->getSeo();
         if ($model->load(Yii::$app->request->post())) {
             $model->save();
         }
@@ -47,15 +50,16 @@ class SeoBehavior extends Behavior
     /**
      * @return Seo|static
      */
-    protected function findSeo()
+    protected function getSeo()
     {
-        $model = Seo::findOne(['item_id' => $this->owner->id, 'modelName' => $this->owner->className()]);
-        if ($model == null) {
-            $model = new Seo;
-            $model->item_id = $this->owner->id;
-            $model->modelName = $this->owner->className();
+        $this->seo = Seo::findOne(['item_id' => $this->owner->id, 'modelName' => $this->owner->className()]);
+        if ($this->seo == null) {
+            $this->seo = new Seo([
+                'item_id' => $this->owner->id,
+                'modelName' => $this->owner->className(),
+            ]);
         }
 
-        return $model;
+        return $this->seo;
     }
 }
