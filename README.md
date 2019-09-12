@@ -1,91 +1,106 @@
-Yii2-seo
+Yii2-Seo
 ==========
 
-Модуль дает возможность быстро присвоить и быстро распаковать СЕО поля: титл, дескрипшн, кейвордс (ТДК) и т.д.
+The module provides an ability to add SEO fields to Model. Fields: title, keywords, description.
 
-Установка
----------------------------------
+Installation
+------------
 
-Выполнить команду
+The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
 
-```
-php composer require pistol88/yii2-seo "*"
-```
-
-Или добавить в composer.json
-
-```
-"pistol88/yii2-seo": "*",
+Either run
+```bash
+composer require sbs/yii2-seo
 ```
 
-И выполнить
-
-```
-php composer update
-```
-
-Миграция:
-
-```
-php yii migrate --migrationPath=vendor/pistol88/yii2-seo/migrations
+or add to the require section of your application's `composer.json` file next line 
+```json
+"sbs/yii2-seo": "*"
 ```
 
-Использование
----------------------------------
+and run
+```bash
+composer update
+```
 
-К модели подключить поведение:
+Migrations
+----------
+
+For add table, to DataBase, you can run next command  
+```bash
+php yii migrate/up --migrationPath=vendor/sbs/yii2-seo/src/migrations
+```
+
+or you can configure your application's `config\console.php`
+
+*This method more preferable because you can run standard migrations commands.*
+```php
+'controllerMap' => [
+    'migrate' => [
+        'class' => MigrateController::class,
+        'migrationNamespaces' => ['sbs\migrations'],
+        //...
+    ],
+    //...
+],
+```
+
+Use with Model
+--------------
+
+You need to add behaviors to model:
 
 ```php
-    function behaviors()
-    {
-        return [
-            'seo' => [
-                'class' => 'pistol88\seo\behaviors\SeoFields',
-            ],
-        ];
-    }
+use sbs\behaviors\SeoBehavior;
+
+function behaviors()
+{
+    return [
+    //...
+        SeoBehavior::class,
+    //...
+    ];
+}
 ```
 
-Теперь все СЕО поля доступны при вызове $model->seo.
+Now all fields will be avalible by $model->seo.
 
-Пример использования во вью файле:
+For add/edit fields in model form view use next widget:
 
 ```php
-
-if(!$title = $model->seo->title) {
-    $title = "Купить {$model->name} в Кургане в магазине «Шоп45»";
-}
-
-if(!$description = $model->seo->description) {
-    $description = 'Страница '.$model->name;
-}
-
-if(!$keywords = $model->seo->keywords) {
-    $keywords = '';
-}
-
-$this->title = $title;
-
-$this->registerMetaTag([
-    'name' => 'description',
-    'content' => $description,
-]);
-
-$this->registerMetaTag([
-    'name' => 'keywords',
-    'content' => $keywords,
-]);
-
+//...
+use sbs\widgets\SeoForm;
+//...
+?>
+<div>
+    <?php $form = ActiveForm::begin(); ?>
+    //...
+    <?= SeoForm::widget(['model' => $model, 'form' => $form]); ?>
+    //...
+    <div class="form-group">
+        <?= Html::submitButton($model->isNewRecord ? 'Create': 'Update'); ?>
+    </div>
+    <?php ActiveForm::end(); ?>
+</div>
 ```
 
-Виджеты
----------------------------------
+For display this field on page view use next widget:
 
-Ввод СЕО полей:
-```
-<?=\pistol88\seo\widgets\SeoForm::widget([
-        'model' => $model, 
-        'form' => $form, 
-    ]); ?>
-```
-Его необходимо вызвать внутри формы редактирования вашей модели.
+```php
+use sbs\widgets\SeoTags;
+//...
+SeoTags::widget(['seo' => $model->seo]);
+// ...
+``` 
+
+Use without Model
+-----------------
+Also, you can use the SeoTags widget without model and DataBase.
+For example, if you need to add SEO to some static page and no need for editing this information in the admin panel:
+
+```php
+use sbs\widgets\SeoTags;
+//...
+SeoTags::widget(['title' => 'title', 'keywords' => 'keyword 1, keyword 2', 'description' => 'your description']);
+// ...
+``` 

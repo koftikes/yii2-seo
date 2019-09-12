@@ -2,18 +2,22 @@
 
 namespace sbs\behaviors;
 
-use Yii;
 use sbs\models\Seo;
+use Yii;
 use yii\base\Behavior;
+use yii\base\Component;
+use yii\base\InvalidCallException;
 use yii\db\ActiveRecord;
 
 class SeoBehavior extends Behavior
 {
-    /** @var ActiveRecord */
+    /**
+     * @var null|ActiveRecord
+     */
     private $seo;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function events()
     {
@@ -25,39 +29,49 @@ class SeoBehavior extends Behavior
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function updateFields($event)
     {
         $model = $this->getSeo();
         if ($model->load(Yii::$app->request->post())) {
-            $model->save();
+            return $model->save();
         }
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function deleteFields($event)
     {
+        if (!$this->owner instanceof Component) {
+            throw new InvalidCallException('Can not find owner of this behavior.');
+        }
+
         if ($this->owner->seo) {
-            $this->owner->seo->delete();
+            return $this->owner->seo->delete();
         }
 
         return true;
     }
 
     /**
-     * @return Seo|static
+     * @return Seo
      */
     protected function getSeo()
     {
-        $this->seo = Seo::findOne(['item_id' => $this->owner->id, 'modelName' => $this->owner->className()]);
-        if ($this->seo == null) {
-            $this->seo = new Seo([
-                'item_id' => $this->owner->id,
-                'modelName' => $this->owner->className(),
-            ]);
+        if (!$this->owner instanceof Component) {
+            throw new InvalidCallException('Can not find owner of this behavior.');
+        }
+
+        if (!$this->seo instanceof Seo) {
+            $this->seo = Seo::findOne(['item_id' => $this->owner->id, 'item_model' => $this->owner::className()]);
+            if (null === $this->seo) {
+                $this->seo = new Seo([
+                    'item_id'    => $this->owner->id,
+                    'item_model' => $this->owner::className(),
+                ]);
+            }
         }
 
         return $this->seo;

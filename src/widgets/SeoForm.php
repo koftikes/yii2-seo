@@ -11,29 +11,52 @@ use yii\widgets\ActiveForm;
 
 class SeoForm extends Widget
 {
-    const TYPE_PANEL = 1;
-    const TYPE_COLLAPSE = 2;
-    const TYPE_SIMPLE = 3;
+    const TYPE_SIMPLE = 1;
 
-    /** @var ActiveRecord */
+    const TYPE_PANEL = 2;
+
+    const TYPE_COLLAPSE = 3;
+
+    /**
+     * @var ActiveRecord
+     */
     public $model;
 
-    /** @var  ActiveForm */
+    /**
+     * @var ActiveForm
+     */
     public $form;
 
+    /**
+     * @var string
+     */
     public $title = 'SEO';
 
-    /** @var string Type of widget display */
-    public $type = self::TYPE_COLLAPSE;
+    /**
+     * @var array list of fields will be shown in form
+     */
+    public $fields = [];
 
+    /**
+     * @var int Type of widget display
+     */
+    public $type = self::TYPE_SIMPLE;
+
+    /**
+     * {@inheritdoc}
+     */
     public function init()
     {
-        if ($this->form === null || !$this->form instanceof ActiveForm) {
+        if (!$this->form instanceof ActiveForm) {
             throw new InvalidConfigException('The "form" property must be set and it should be instance of "ActiveForm".');
         }
 
-        if ($this->model === null || !$this->model instanceof ActiveRecord) {
+        if (!$this->model instanceof ActiveRecord) {
             throw new InvalidConfigException('The "model" property must be set and it should be instance of "ActiveRecord".');
+        }
+
+        if (empty($this->fields)) {
+            $this->fields = ['title', 'keywords', 'description'];
         }
 
         parent::init();
@@ -41,30 +64,34 @@ class SeoForm extends Widget
 
     public function run()
     {
-        if ($this->model->isNewRecord) {
-            $this->model = new Seo;
-        } else {
-            $this->model = $this->model->seo;
+        if (!$this->model->seo instanceof Seo) {
+            $this->model->seo = new Seo();
         }
 
         $content = [];
-        $content[] = $this->form->field($this->model, 'title')->textInput();
-        $content[] = $this->form->field($this->model, 'keywords')->textarea();
-        $content[] = $this->form->field($this->model, 'description')->textarea(['rows' => 4]);
-
-        if ($this->type == self::TYPE_SIMPLE) {
-            return implode('', $content);
+        if (\in_array('title', $this->fields, true)) {
+            $content[] = $this->form->field($this->model->seo, 'title')->textInput();
+        }
+        if (\in_array('keywords', $this->fields, true)) {
+            $content[] = $this->form->field($this->model->seo, 'keywords')->textarea();
+        }
+        if (\in_array('description', $this->fields, true)) {
+            $content[] = $this->form->field($this->model->seo, 'description')->textarea(['rows' => 4]);
         }
 
-        $body = Html::tag('div', implode('', $content), ['class' => 'panel-body']);
-        if ($this->type == self::TYPE_COLLAPSE) {
+        if (self::TYPE_SIMPLE === $this->type) {
+            return \implode('', $content);
+        }
+
+        $title = $this->title;
+        $body  = Html::tag('div', \implode('', $content), ['class' => 'panel-body']);
+
+        if (self::TYPE_COLLAPSE === $this->type) {
             $title = Html::a($this->title, '#' . $this->id, ['data-toggle' => 'collapse']);
-            $body = Html::tag('div', $body, ['class' => 'panel-collapse collapse', 'id' => $this->id]);
-        } else {
-            $title = $this->title;
+            $body  = Html::tag('div', $body, ['class' => 'panel-collapse collapse', 'id' => $this->id]);
         }
 
-        $heading = Html::tag('div', Html::tag('h4', $title, ['class' => 'panel-title']), ['class' => 'panel-heading']);
+        $heading = Html::tag('div', Html::tag('h2', $title, ['class' => 'panel-title']), ['class' => 'panel-heading']);
 
         return Html::tag('div', $heading . $body, ['class' => 'panel panel-default']);
     }
