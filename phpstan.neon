@@ -1,0 +1,6 @@
+parameters:
+    ignoreErrors:
+        - '#Access to static property \$app on an unknown class Yii.#'
+        - '#Access to an undefined property yii\\db\\ActiveRecord::\$seo.#'
+        - '#Access to an undefined property yii\\base\\Component::\$seo.#'
+        - '#Access to an undefined property yii\\base\\Component::\$id.#'
