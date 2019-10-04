@@ -33,12 +33,15 @@ php yii migrate/up --migrationPath=vendor/sbs/yii2-seo/src/migrations
 
 or you can configure your application's `config\console.php`
 
-*This method more preferable because you can run standard migrations commands.*
+*This method more preferable because you can run all standard migrations commands.*
 ```php
 'controllerMap' => [
     'migrate' => [
         'class' => MigrateController::class,
-        'migrationNamespaces' => ['sbs\migrations'],
+        'migrationPath' => [
+            '@console/migrations',
+            '@vendor/sbs/yii2-seo/src/migrations',
+        ],
         //...
     ],
     //...

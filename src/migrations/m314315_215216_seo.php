@@ -1,8 +1,5 @@
 <?php
 
-namespace sbs\migrations;
-
-use yii\db\Connection;
 use yii\db\Migration;
 
 class m314315_215216_seo extends Migration
@@ -10,7 +7,7 @@ class m314315_215216_seo extends Migration
     public function up()
     {
         $tableOptions = null;
-        if ($this->db instanceof Connection && 'mysql' === $this->db->driverName) {
+        if ('mysql' === $this->db->driverName) {
             $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
         }
 
