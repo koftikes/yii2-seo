@@ -45,7 +45,7 @@ class SeoForm extends Widget
     /**
      * {@inheritdoc}
      */
-    public function init()
+    public function init(): void
     {
         if (!$this->form instanceof ActiveForm) {
             throw new InvalidConfigException('The "form" property must be set and it should be instance of "ActiveForm".');

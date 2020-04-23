@@ -29,7 +29,9 @@ class SeoBehavior extends Behavior
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $event
+     *
+     * @return bool
      */
     public function updateFields($event)
     {
@@ -37,10 +39,14 @@ class SeoBehavior extends Behavior
         if ($model->load(Yii::$app->request->post())) {
             return $model->save();
         }
+
+        return false;
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $event
+     *
+     * @return bool
      */
     public function deleteFields($event)
     {

@@ -1,23 +1,19 @@
 Yii2-Seo
 ==========
-
 The module provides an ability to add SEO fields to Model. Fields: title, keywords, description.
 
 Installation
 ------------
-
 The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
 
 Either run
 ```bash
 composer require sbs/yii2-seo
 ```
-
 or add to the require section of your application's `composer.json` file next line 
 ```json
-"sbs/yii2-seo": "*"
+"sbs/yii2-seo": "^1.0"
 ```
-
 and run
 ```bash
 composer update
@@ -25,12 +21,10 @@ composer update
 
 Migrations
 ----------
-
 For add table, to DataBase, you can run next command  
 ```bash
 php yii migrate/up --migrationPath=vendor/sbs/yii2-seo/src/migrations
 ```
-
 or you can configure your application's `config\console.php`
 
 *This method more preferable because you can run all standard migrations commands.*
@@ -45,12 +39,11 @@ or you can configure your application's `config\console.php`
         //...
     ],
     //...
-],
+]
 ```
 
 Use with Model
 --------------
-
 You need to add behaviors to model:
 
 ```php
@@ -66,7 +59,7 @@ function behaviors()
 }
 ```
 
-Now all fields will be avalible by $model->seo.
+Now all fields will be available by $model->seo.
 
 For add/edit fields in model form view use next widget:
 

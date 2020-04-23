@@ -1,11 +1,8 @@
 language: php
 
 php:
-    - '7.1'
     - '7.2'
-
-# faster builds on new travis setup not using sudo
-sudo: false
+    - '7.4'
 
 # cache vendor dirs
 cache:
@@ -13,9 +10,7 @@ cache:
         - $HOME/.composer/cache
 
 before_script:
-    - composer config github-oauth.github.com ${GH_TOKEN}
-    - composer global require fxp/composer-asset-plugin
-    - composer update --prefer-dist --no-interaction
+    - composer install --prefer-dist --no-interaction
 
 script:
     - vendor/bin/phpstan analyse -c phpstan.neon -l max src

@@ -31,7 +31,7 @@ class SeoTags extends Widget
     /**
      * {@inheritdoc}
      */
-    public function init()
+    public function init(): void
     {
         if (empty($this->title) && empty($this->keywords) && empty($this->description)) {
             if (!$this->seo instanceof Seo) {
@@ -42,6 +42,9 @@ class SeoTags extends Widget
         parent::init();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function run()
     {
         if ($this->seo instanceof Seo) {
@@ -60,5 +63,7 @@ class SeoTags extends Widget
         $this->view->title = $this->title;
         $this->view->registerMetaTag(['name' => 'keywords', 'content' => $this->keywords]);
         $this->view->registerMetaTag(['name' => 'description', 'content' => $this->description]);
+
+        return '';
     }
 }
